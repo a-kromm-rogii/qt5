@@ -305,3 +305,6 @@
 	url = ../qtwebglplugin.git
 	branch = 5.12.5
 	status = addon
+[submodule "cmake/cnpm"]
+	path = cmake/cnpm
+	url = https://github.com/rogii-com/cnpm.git
