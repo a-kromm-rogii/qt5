@@ -166,6 +166,12 @@ set(
     "Rogii"
 )
 
+message(
+    STATUS
+    "Don't forget to update repo. "
+    "perl init-repository -f --mirror https://github.com/qt/ --module-subset=qtactiveqt,qtbase,qtdeclarative,qtdoc,qtgraphicaleffects,qtimageformats,qtquickcontrols,qtquickcontrols2,qtsvg,qttools,qttranslations,qtwebsockets,qtwinextras,qtxmlpatterns |& tee log-init-repository.txt"
+)
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(
         ENV{OPENSSL_LIBS}
