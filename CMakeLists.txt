@@ -89,14 +89,34 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 elseif(MSVC)
     NPM_ADD_PACKAGE(
         NAME
+            msvs
+        VERSION
+            2019
+        BUILD_NUMBER
+            0
+        TAG
+            ""
+    )
+
+    NPM_ADD_PACKAGE(
+        NAME
+            WindowsSDK
+        VERSION
+            10.0.18362.0
+        BUILD_NUMBER
+            0
+    )
+
+    NPM_ADD_PACKAGE(
+        NAME
             OpenSSL
         VERSION
-            1.0.2.15
+            1.1.1.3
         BUILD_NUMBER
-            2
+            0
         TAG
-            "sdk14393_vs2015up3"
-)
+            "sdk18362_vsbt19"
+    )
 endif()
 
 set(
