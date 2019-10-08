@@ -41,7 +41,6 @@ find_package(
         Test
         Network
         NetworkAuth
-        WebSockets
         OpenGL
         LinguistTools
         Qml
