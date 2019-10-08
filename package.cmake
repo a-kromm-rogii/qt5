@@ -442,6 +442,36 @@ if(WIN32)
             )
         endforeach()
     endforeach()
+	
+	set(
+        TARGETS_TO_INSTALL
+
+        QWindowsVistaStylePlugin
+    )
+
+    foreach(plugin ${TARGETS_TO_INSTALL})
+        set(
+            COMPONENT_NAMES
+
+            CNPM_RUNTIME_Qt5_plugins_styles_${plugin}
+            CNPM_RUNTIME_Qt5_plugins_styles
+            CNPM_RUNTIME_Qt5_plugins
+            CNPM_RUNTIME_Qt5
+            CNPM_RUNTIME
+        )
+
+        foreach(COMPONENT_NAME ${COMPONENT_NAMES})
+            install(
+                FILES
+                    $<TARGET_FILE:Qt5::${plugin}>
+                DESTINATION
+                    "./styles"
+                COMPONENT
+                    ${COMPONENT_NAME}
+                EXCLUDE_FROM_ALL
+            )
+        endforeach()
+    endforeach()
 endif()
 
 unset(
