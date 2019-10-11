@@ -113,7 +113,7 @@ elseif(MSVC)
         VERSION
             1.1.1.3
         BUILD_NUMBER
-            0
+            1
         TAG
             "sdk18362_vsbt19"
     )
