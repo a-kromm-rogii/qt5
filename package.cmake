@@ -40,7 +40,6 @@ find_package(
         PrintSupport
         Test
         Network
-        NetworkAuth
         OpenGL
         LinguistTools
         Qml
