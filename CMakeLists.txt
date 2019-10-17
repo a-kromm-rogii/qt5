@@ -223,6 +223,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             -skip qtgamepad
             -skip qtlocation
             -skip qtmultimedia
+            -skip qtnetworkauth
             -skip qtpim
             -skip qtpurchasing
             -skip qtqa
