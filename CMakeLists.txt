@@ -189,7 +189,7 @@ set(
 message(
     STATUS
     "Don't forget to update repo. "
-    "perl init-repository -f --mirror https://github.com/qt/ --module-subset=qtactiveqt,qtbase,qtdeclarative,qtdoc,qtgraphicaleffects,qtimageformats,qtquickcontrols,qtquickcontrols2,qtsvg,qttools,qttranslations,qtwebsockets,qtwinextras,qtxmlpatterns,qtnetworkauth |& tee log-init-repository.txt"
+    "perl init-repository -f --mirror https://github.com/qt/ --module-subset=qtactiveqt,qtbase,qtdeclarative,qtdoc,qtgraphicaleffects,qtimageformats,qtquickcontrols,qtquickcontrols2,qtsvg,qttools,qttranslations,qtwebsockets,qtwinextras,qtxmlpatterns |& tee log-init-repository.txt"
 )
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -223,6 +223,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             -skip qtgamepad
             -skip qtlocation
             -skip qtmultimedia
+            -skip qtnetworkauth
             -skip qtpim
             -skip qtpurchasing
             -skip qtqa
