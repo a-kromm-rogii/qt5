@@ -309,3 +309,6 @@
 	url = ../qtremoteobjects.git
 	branch = 5.9
 	status = preview
+[submodule "cmake/npm"]
+	path = cmake/npm
+	url = https://github.com/rogii-com/cnpm.git
