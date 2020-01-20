@@ -80,6 +80,14 @@ endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     NPM_ADD_PACKAGE(
         NAME
+            gxx_runtime
+        VERSION
+            9.2.1
+        BUILD_NUMBER
+            0
+    )
+    NPM_ADD_PACKAGE(
+        NAME
             OpenSSL
         VERSION
             1.0.2.15
@@ -191,10 +199,6 @@ message(
 )
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(
-        ENV{OPENSSL_LIBS}
-        "-I ${OPENSSL_INCLUDE_DIRECTROIES} -L ${OPENSSL_LIBDIR} -l:${OPENSSL_FILENAME} -l:${CRYPTO_FILENAME}"
-    )
     add_custom_command(
         OUTPUT
             ${CMAKE_INSTALL_PREFIX}/bin/qmake
@@ -207,7 +211,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             -force-debug-info
             -opensource
             -confirm-license
-            -plugin-sql-odbc
             -nomake examples
             -no-compile-examples
             -skip qt3d
@@ -241,8 +244,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             -no-dbus
             -qtlibinfix ${QT_SUFFIX}
             -no-icu
-            -no-libpng
-            -openssl-runtime 
+            -qt-libpng
+            -openssl-runtime
+            OPENSSL_PREFIX="${OPENSSL_INCLUDE_DIRECTROIES}/../"
+            OPENSSL_LIBS="-l:${OPENSSL_FILENAME};-l:${CRYPTO_FILENAME}"
         COMMAND
             make -j${N}
         COMMAND
