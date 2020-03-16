@@ -391,9 +391,17 @@ if(WIN32)
         endforeach()
     endforeach()
 
-    # yes, this copies also platform plugins, but who cares
-    # about so awkward Qt5's cmake?
-    foreach(plugin ${Qt5Gui_PLUGINS})
+    set(
+        IMAGEFORMATS_TO_INSTALL
+
+        QWbmpPlugin
+        QJpegPlugin
+        QICOPlugin
+        QTiffPlugin
+        QSvgPlugin
+    )
+
+    foreach(plugin ${IMAGEFORMATS_TO_INSTALL})
         set(
             COMPONENT_NAMES
 
@@ -407,7 +415,7 @@ if(WIN32)
         foreach(COMPONENT_NAME ${COMPONENT_NAMES})
             install(
                 FILES
-                    $<TARGET_FILE:${plugin}>
+                    $<TARGET_FILE:Qt5::${plugin}>
                 DESTINATION
                     "./imageformats"
                 COMPONENT
@@ -417,28 +425,26 @@ if(WIN32)
         endforeach()
     endforeach()
 
-    foreach(plugin ${Qt5Svg_PLUGINS})
-        set(
-            COMPONENT_NAMES
+    set(
+        COMPONENT_NAMES
 
-            CNPM_RUNTIME_Qt5_plugins_iconengines_${plugin}
-            CNPM_RUNTIME_Qt5_plugins_iconengines
-            CNPM_RUNTIME_Qt5_plugins
-            CNPM_RUNTIME_Qt5
-            CNPM_RUNTIME
+        CNPM_RUNTIME_Qt5_plugins_iconengines_QSvgIconPlugin
+        CNPM_RUNTIME_Qt5_plugins_iconengines
+        CNPM_RUNTIME_Qt5_plugins
+        CNPM_RUNTIME_Qt5
+        CNPM_RUNTIME
+    )
+
+    foreach(COMPONENT_NAME ${COMPONENT_NAMES})
+        install(
+            FILES
+                $<TARGET_FILE:Qt5::QSvgIconPlugin>
+            DESTINATION
+                "./iconengines"
+            COMPONENT
+                ${COMPONENT_NAME}
+            EXCLUDE_FROM_ALL
         )
-
-        foreach(COMPONENT_NAME ${COMPONENT_NAMES})
-            install(
-                FILES
-                    $<TARGET_FILE:${plugin}>
-                DESTINATION
-                    "./iconengines"
-                COMPONENT
-                    ${COMPONENT_NAME}
-                EXCLUDE_FROM_ALL
-            )
-        endforeach()
     endforeach()
 
     set(
