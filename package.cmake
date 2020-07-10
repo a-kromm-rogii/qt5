@@ -399,6 +399,7 @@ if(WIN32)
         QICOPlugin
         QTiffPlugin
         QSvgPlugin
+        QGifPlugin
     )
 
     foreach(plugin ${IMAGEFORMATS_TO_INSTALL})
