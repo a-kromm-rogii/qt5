@@ -176,6 +176,11 @@ set(
     "${PROJECT_ROOT_PATH}/qtquickcontrols2"
 )
 
+set(
+    QT_TOOLS_PATH
+    "${ROOT}/${PACKAGE_NAME}/bin"
+)
+
 if(WIN32)
     set(
         PLATFORM_BUILD_COMMAND
@@ -203,7 +208,21 @@ endif()
 
 execute_process(
     COMMAND
-        "${ROOT}/${PACKAGE_NAME}/bin/qmlcachegen" -h
+        "${QT_TOOLS_PATH}/qmake" -help
+    RESULT_VARIABLE
+        QMAKE_RESULT
+)
+
+if(NOT QMAKE_RESULT EQUAL 0)
+    message(
+        FATAL_ERROR
+        "Qmake not found in '${QT_TOOLS_PATH}'."
+    )
+endif()
+
+execute_process(
+    COMMAND
+        "${QT_TOOLS_PATH}/qmlcachegen" -h
     RESULT_VARIABLE
         QUICK_COMPILER_RESULT
 )
@@ -211,7 +230,7 @@ execute_process(
 if(NOT QUICK_COMPILER_RESULT EQUAL 0)
     message(
         FATAL_ERROR
-        "Quick compiler is not in the PATH."
+        "Quick compiler not found in '${QT_TOOLS_PATH}'."
     )
 endif()
 
@@ -232,7 +251,7 @@ execute_process(
 
 execute_process(
     COMMAND
-        "${ROOT}/${PACKAGE_NAME}/bin/qmake"
+        "${QT_TOOLS_PATH}/qmake"
     WORKING_DIRECTORY
         "${QUICKCONTROLS2_ROOT_PATH}"
 )
