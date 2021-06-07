@@ -181,6 +181,12 @@ set(
     "${ROOT}/${PACKAGE_NAME}/bin"
 )
 
+get_filename_component(
+    INSTALL_DIR_NAME
+    "${ROOT}"
+    NAME
+)
+
 if(WIN32)
     set(
         PLATFORM_BUILD_COMMAND
@@ -237,7 +243,7 @@ endif()
 # Clean is required to configure quickcontrols2 correctly
 execute_process(
     COMMAND
-        ${GIT_EXECUTABLE} clean -fdx
+        ${GIT_EXECUTABLE} clean -fdx -e /${INSTALL_DIR_NAME}/
     WORKING_DIRECTORY
         "${PROJECT_ROOT_PATH}"
 )
