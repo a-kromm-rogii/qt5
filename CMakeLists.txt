@@ -11,9 +11,8 @@ include(ProcessorCount)
 ProcessorCount(N)
 message(STATUS "Processor count is ${N}")
 
-include(
-    ${PROJECT_SOURCE_DIR}/cmake/npm/NastyPackageManager.cmake
-)
+include(${PROJECT_SOURCE_DIR}/rogii/npm/Include.cmake)
+include(${PROJECT_SOURCE_DIR}/rogii/Environment.cmake)
 
 execute_process(
     COMMAND
@@ -65,67 +64,34 @@ if((NOT PYTHON_RESULT EQUAL 0) OR (NOT PYTHON_ALL_OUTPUT MATCHES "2\.7"))
     )
 endif()
 
-message(
-    STATUS
-    "ENV{CL} = $ENV{CL}"
-)
+if(MSVC)
+    execute_process(
+        COMMAND
+            jom
+            /version
+        RESULT_VARIABLE
+            JOM_RESULT
+        OUTPUT_VARIABLE
+            JOM_ALL_OUTPUT
+        ERROR_VARIABLE
+            JOM_ALL_OUTPUT
+    )
 
-if(MSVC AND NOT "$ENV{CL}" MATCHES "\/MP")
     message(
-        FATAL_ERROR
-        "ENV{CL} does not contain /MP."
+        STATUS
+        "JOM_RESULT = ${JOM_RESULT}; "
+        "JOM_ALL_OUTPUT = ${JOM_ALL_OUTPUT}"
     )
+
+    if(NOT JOM_RESULT EQUAL 0)
+        message(
+            FATAL_ERROR
+            "Jom is not in the PATH."
+        )
+    endif()
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    NPM_ADD_PACKAGE(
-        NAME
-            gxx_runtime
-        VERSION
-            9.2.1
-        BUILD_NUMBER
-            0
-    )
-    NPM_ADD_PACKAGE(
-        NAME
-            OpenSSL
-        VERSION
-            1.1.1.7
-        BUILD_NUMBER
-            0
-    )
-elseif(MSVC)
-    NPM_ADD_PACKAGE(
-        NAME
-            msvs
-        VERSION
-            2019.14.27.29110
-        BUILD_NUMBER
-            1
-    )
-
-    NPM_ADD_PACKAGE(
-        NAME
-            WindowsSDK
-        VERSION
-            10.0.18362.0
-        BUILD_NUMBER
-            4
-    )
-
-    NPM_ADD_PACKAGE(
-        NAME
-            OpenSSL
-        VERSION
-            1.1.1.7
-        BUILD_NUMBER
-            0
-        TAG
-            "sdk18362_vsbt19"
-    )
-endif()
-
-NPM_PREPARE_PACKAGES(
+CNPM_PREPARE_PACKAGES(
     DEFAULT_REPOSITORY_URLS
     "$ENV{CNPM_URLS}"
 )
@@ -180,11 +146,25 @@ set(
     "Rogii"
 )
 
-message(
-    STATUS
-    "Don't forget to update repo. "
-    "perl init-repository -f --mirror https://github.com/qt/ --module-subset=qtactiveqt,qtbase,qtdeclarative,qtdoc,qtgraphicaleffects,qtimageformats,qtquickcontrols,qtquickcontrols2,qtsvg,qttools,qttranslations,qtwebsockets,qtwinextras,qtxmlpatterns |& tee log-init-repository.txt"
+execute_process(
+    COMMAND
+        perl
+        init-repository
+        -f
+        --mirror https://github.com/qt/
+        --module-subset=qtactiveqt,qtbase,qtdeclarative,qtdoc,qtgraphicaleffects,qtimageformats,qtquickcontrols,qtquickcontrols2,qtsvg,qttools,qttranslations,qtwebsockets,qtwinextras,qtxmlpatterns
+    RESULT_VARIABLE
+        INIT_REPOSITORY_RESULT
+    WORKING_DIRECTORY
+        ${PROJECT_SOURCE_DIR}
 )
+
+if(NOT INIT_REPOSITORY_RESULT EQUAL 0)
+    message(
+        FATAL_ERROR
+        "Failed to initialize repository."
+    )
+endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_custom_command(
@@ -192,6 +172,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             ${CMAKE_INSTALL_PREFIX}/bin/qmake
         COMMAND
             ./configure
+            -silent
             -prefix ${CMAKE_INSTALL_PREFIX} 
             -translationdir ${CMAKE_INSTALL_PREFIX}/translations
             -platform linux-g++
@@ -199,6 +180,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             -force-debug-info
             -opensource
             -confirm-license
+            -nomake tests
             -nomake examples
             -no-compile-examples
             -opengl es2
@@ -216,6 +198,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             -skip qtpim
             -skip qtpurchasing
             -skip qtqa
+            -skip qtquickcontrols2
             -skip qtremoteobjects
             -skip qtrepotools
             -skip qtscript
@@ -235,6 +218,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             -qtlibinfix ${QT_SUFFIX}
             -no-icu
             -qt-libpng
+            -qt-zlib
             -openssl-runtime
             OPENSSL_PREFIX="${OPENSSL_INCLUDE_DIRECTROIES}/../"
             OPENSSL_LIBS="-l:${OPENSSL_FILENAME};-l:${CRYPTO_FILENAME}"
@@ -251,6 +235,7 @@ elseif(MSVC)
             ${CMAKE_INSTALL_PREFIX}/bin/qmake
         COMMAND
             cmd /C configure
+            -silent
             -prefix ${CMAKE_INSTALL_PREFIX}
             -translationdir ${CMAKE_INSTALL_PREFIX}/translations
             -platform win32-msvc
@@ -261,6 +246,7 @@ elseif(MSVC)
             -confirm-license
             -plugin-sql-odbc
             -opengl dynamic
+            -nomake tests
             -nomake examples
             -no-compile-examples
             -skip qt3d
@@ -277,6 +263,7 @@ elseif(MSVC)
             -skip qtpim
             -skip qtpurchasing
             -skip qtqa
+            -skip qtquickcontrols2
             -skip qtremoteobjects
             -skip qtrepotools
             -skip qtscript
@@ -297,7 +284,7 @@ elseif(MSVC)
             -openssl-runtime
             -I ${OPENSSL_INCLUDE_DIRECTROIES} -L ${OPENSSL_LIBDIR}
         COMMAND
-            nmake
+            jom /j${N}
         COMMAND
             nmake install
         WORKING_DIRECTORY
