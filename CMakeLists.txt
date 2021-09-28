@@ -12,7 +12,7 @@ ProcessorCount(N)
 message(STATUS "Processor count is ${N}")
 
 include(${PROJECT_SOURCE_DIR}/rogii/npm/Include.cmake)
-include(${PROJECT_SOURCE_DIR}/rogii/Environment.cmake)
+include(${PROJECT_SOURCE_DIR}/rogii/environment.cmake)
 
 execute_process(
     COMMAND

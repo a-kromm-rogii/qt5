@@ -80,14 +80,14 @@ else()
     endif()
 endif()
 
-set(
-    VERSION
-    5.15.1
+include(
+    "${CMAKE_CURRENT_LIST_DIR}/version.cmake"
+		  
 )
 
 set(
     PACKAGE_NAME
-    "qt-${VERSION}-${ARCH}-${BUILD}${TAG}"
+    "qt-${ROGII_QT_VERSION}-${ARCH}-${BUILD}${TAG}"
 )
 
 set(
@@ -98,11 +98,6 @@ set(
 file(
     MAKE_DIRECTORY
     "${DEBUG_PATH}"
-)
-
-set(
-    NPM_ROOT
-    "${ENV_INSTALL}"
 )
 
 if(WIN32)
