@@ -10,6 +10,7 @@ project(
 include(ProcessorCount)
 ProcessorCount(N)
 message(STATUS "Processor count is ${N}")
+
 set(
     ROGII_FOLDER_PATH
     "${CMAKE_CURRENT_LIST_DIR}/rogii"
@@ -22,30 +23,57 @@ CNPM_PREPARE_PACKAGES(
     "$ENV{CNPM_URLS}"
 )
 
-find_package(Python COMPONENTS Interpreter Development)
-if(NOT Python_FOUND)
-    message(
-        FATAL_ERROR
-        "Python is not in the PATH."
-    )
-else()
-    message(
-        STATUS
-        "Found Python ${Python_VERSION}"
-  )
-endif()
+execute_process(
+    COMMAND
+        perl
+        -v
+    RESULT_VARIABLE
+        PERL_RESULT
+    OUTPUT_VARIABLE
+        PERL_ALL_OUTPUT
+    ERROR_VARIABLE
+        PERL_ALL_OUTPUT
+)
 
-find_package(Perl)
-if(NOT PERL_FOUND)
+message(
+    STATUS
+    "PERL_RESULT = ${PERL_RESULT}; "
+    "PERL_ALL_OUTPUT = ${PERL_ALL_OUTPUT}"
+)
+
+if(NOT PERL_RESULT EQUAL 0)
     message(
         FATAL_ERROR
         "Perl is not in the PATH."
     )
-else()
-    message(
-        STATUS
-        "Found Perl ${PERL_VERSION_STRING}"
-    )
+endif()
+
+execute_process(
+    COMMAND
+        python
+        --version
+    RESULT_VARIABLE
+        PYTHON_RESULT
+    OUTPUT_VARIABLE
+        PYTHON_ALL_OUTPUT
+    ERROR_VARIABLE
+        PYTHON_ALL_OUTPUT
+)
+
+message(
+    STATUS
+    "PYTHON_RESULT = ${PYTHON_RESULT}; "
+    "PYTHON_ALL_OUTPUT = ${PYTHON_ALL_OUTPUT}"
+)
+
+if((NOT PYTHON_RESULT EQUAL 0))
+    if((NOT PYTHON_ALL_OUTPUT MATCHES "2\.7")
+        AND (NOT PYTHON_ALL_OUTPUT MATCHES "3\.6") )
+        message(
+            FATAL_ERROR
+            "Python is not in the PATH."
+        )
+    endif()
 endif()
 
 if(MSVC)
@@ -277,4 +305,3 @@ add_custom_target(
     DEPENDS
        ${CMAKE_INSTALL_PREFIX}/bin/qmake
 )
-
