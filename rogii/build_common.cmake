@@ -87,7 +87,7 @@ include(
 
 set(
     PACKAGE_NAME
-    "qt-${ROGII_QT_VERSION}-${ARCH}-${BUILD}${TAG}"
+    "qt-${ROGII_PKG_VERSION}-${ARCH}-${BUILD}${TAG}"
 )
 
 set(
@@ -100,16 +100,9 @@ file(
     "${DEBUG_PATH}"
 )
 
-if(WIN32)
-    set(
-        CMAKE_GENERATOR
-        -G "NMake Makefiles"
-    )
-endif()
-
 execute_process(
     COMMAND
-       "${CMAKE_COMMAND}" ${CMAKE_GENERATOR} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=${ROOT}/${PACKAGE_NAME} ../.. 
+       "${CMAKE_COMMAND}" -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=${ROOT}/${PACKAGE_NAME} ../.. 
     WORKING_DIRECTORY
         "${DEBUG_PATH}"
 )
