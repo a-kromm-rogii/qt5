@@ -10,57 +10,41 @@ project(
 include(ProcessorCount)
 ProcessorCount(N)
 message(STATUS "Processor count is ${N}")
+set(
+    ROGII_FOLDER_PATH
+    "${CMAKE_CURRENT_LIST_DIR}/rogii"
+)
+include(${ROGII_FOLDER_PATH}/npm/Include.cmake)
+include(${ROGII_FOLDER_PATH}/environment.cmake)
 
-include(${PROJECT_SOURCE_DIR}/rogii/npm/Include.cmake)
-include(${PROJECT_SOURCE_DIR}/rogii/environment.cmake)
-
-execute_process(
-    COMMAND
-        perl
-        -v
-    RESULT_VARIABLE
-        PERL_RESULT
-    OUTPUT_VARIABLE
-        PERL_ALL_OUTPUT
-    ERROR_VARIABLE
-        PERL_ALL_OUTPUT
+CNPM_PREPARE_PACKAGES(
+    DEFAULT_REPOSITORY_URLS
+    "$ENV{CNPM_URLS}"
 )
 
-message(
-    STATUS
-    "PERL_RESULT = ${PERL_RESULT}; "
-    "PERL_ALL_OUTPUT = ${PERL_ALL_OUTPUT}"
-)
+find_package(Python COMPONENTS Interpreter Development)
+if(NOT Python_FOUND)
+    message(
+        FATAL_ERROR
+        "Python is not in the PATH."
+    )
+else()
+    message(
+        STATUS
+        "Found Python ${Python_VERSION}"
+  )
+endif()
 
-if(NOT PERL_RESULT EQUAL 0)
+find_package(Perl)
+if(NOT PERL_FOUND)
     message(
         FATAL_ERROR
         "Perl is not in the PATH."
     )
-endif()
-
-execute_process(
-    COMMAND
-        python
-        --version
-    RESULT_VARIABLE
-        PYTHON_RESULT
-    OUTPUT_VARIABLE
-        PYTHON_ALL_OUTPUT
-    ERROR_VARIABLE
-        PYTHON_ALL_OUTPUT
-)
-
-message(
-    STATUS
-    "PYTHON_RESULT = ${PYTHON_RESULT}; "
-    "PYTHON_ALL_OUTPUT = ${PYTHON_ALL_OUTPUT}"
-)
-
-if((NOT PYTHON_RESULT EQUAL 0) OR (NOT PYTHON_ALL_OUTPUT MATCHES "2\.7"))
+else()
     message(
-        FATAL_ERROR
-        "Python 2.7.x is not in the PATH."
+        STATUS
+        "Found Perl ${PERL_VERSION_STRING}"
     )
 endif()
 
@@ -90,11 +74,6 @@ if(MSVC)
         )
     endif()
 endif()
-
-CNPM_PREPARE_PACKAGES(
-    DEFAULT_REPOSITORY_URLS
-    "$ENV{CNPM_URLS}"
-)
 
 # get directory of openssl libs
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
