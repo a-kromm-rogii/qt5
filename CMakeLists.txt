@@ -66,14 +66,11 @@ message(
     "PYTHON_ALL_OUTPUT = ${PYTHON_ALL_OUTPUT}"
 )
 
-if((NOT PYTHON_RESULT EQUAL 0))
-    if((NOT PYTHON_ALL_OUTPUT MATCHES "2\.7")
-        AND (NOT PYTHON_ALL_OUTPUT MATCHES "3\.6") )
-        message(
-            FATAL_ERROR
-            "Python is not in the PATH."
-        )
-    endif()
+if((NOT PYTHON_RESULT EQUAL 0) OR ((NOT PYTHON_ALL_OUTPUT MATCHES "2\.7") AND (NOT PYTHON_ALL_OUTPUT MATCHES "3\.6")))
+    message(
+        FATAL_ERROR
+        "Python 2.7.x or 3.6.x is not in the PATH."
+    )
 endif()
 
 if(MSVC)
