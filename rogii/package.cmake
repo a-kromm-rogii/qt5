@@ -25,7 +25,7 @@ set(
 
 set(
     QT_VERSION
-    5.15.8
+    5.15.9
 )
 
 set(
