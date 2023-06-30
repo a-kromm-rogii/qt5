@@ -240,6 +240,7 @@ elseif(MSVC)
         COMMAND
             cmd /C configure
             -silent
+            -developer-build
             -prefix ${CMAKE_INSTALL_PREFIX}
             -translationdir ${CMAKE_INSTALL_PREFIX}/translations
             -platform win32-msvc
