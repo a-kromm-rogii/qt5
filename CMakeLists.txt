@@ -181,6 +181,13 @@ if(NOT INIT_REPOSITORY_RESULT EQUAL 0)
     )
 endif()
 
+execute_process(
+    COMMAND
+        git apply rogii/10-fix-compilation-msvc17.8.patch
+    WORKING_DIRECTORY
+        ${PROJECT_SOURCE_DIR}
+)
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_custom_command(
         OUTPUT
