@@ -20,5 +20,5 @@ CNPM_ADD_PACKAGE(
     BUILD_NUMBER
         23
     TAG
-        "sdk18362_vsbt19"
+        "sdk18362_vsbt19_fix"
 )
